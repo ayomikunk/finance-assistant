@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="row spread">
+  <h1>Monthly overview</h1>
+  <form method="get" action="/" class="month-form">
+    <label>Month <input type="month" name="month" value="{{ month }}"></label>
+    <button type="submit">View</button>
+  </form>
+</div>
+
+<div class="cards">
+  <div class="card stat income">
+    <span class="label">Money in</span>
+    <span class="value">{{ "%.2f"|format(summary.total_income) }}</span>
+  </div>
+  <div class="card stat expense">
+    <span class="label">Money out</span>
+    <span class="value">{{ "%.2f"|format(summary.total_expense) }}</span>
+  </div>
+  <div class="card stat net">
+    <span class="label">Net</span>
+    <span class="value">{{ "%.2f"|format(summary.net) }}</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="row spread">
+    <h2>Spending by category</h2>
+    <a class="btn-link" href="/budgets?month={{ month }}">Edit budgets</a>
+  </div>
+  {% if summary.categories %}
+  <table class="grid">
+    <thead>
+      <tr><th>Category</th><th class="num">Spent</th><th class="num">Budget</th>
+      <th class="num">Remaining</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for c in summary.categories %}
+      <tr>
+        <td>{{ c.category }}</td>
+        <td class="num">{{ "%.2f"|format(c.spent) }}</td>
+        <td class="num">{% if c.budget is not none %}{{ "%.2f"|format(c.budget) }}{% else %}—{% endif %}</td>
+        <td class="num">{% if c.remaining is not none %}{{ "%.2f"|format(c.remaining) }}{% else %}—{% endif %}</td>
+        <td>
+          {% if c.budget is none %}
+            <span class="pill muted">No budget</span>
+          {% else %}
+            <div class="bar">
+              <div class="bar-fill {{ 'over' if c.over_budget else 'ok' }}"
+                   style="width: {{ [c.percent_used, 100]|min }}%"></div>
+            </div>
+            <span class="pill {{ 'over' if c.over_budget else 'ok' }}">
+              {{ "%.0f"|format(c.percent_used) }}%
+              {{ 'over budget' if c.over_budget else 'used' }}
+            </span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">No transactions for this month yet.
+    <a href="/upload">Upload a statement</a> to get started.</p>
+  {% endif %}
+</div>
+{% endblock %}

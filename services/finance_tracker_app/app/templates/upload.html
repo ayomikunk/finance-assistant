@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Upload statement{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Upload bank statement</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  {% if message %}<p class="success">{{ message }}</p>{% endif %}
+  <form method="post" action="/upload" enctype="multipart/form-data">
+    <label>CSV file <input type="file" name="file" accept=".csv" required></label>
+    <button type="submit">Upload &amp; categorize</button>
+  </form>
+  <p class="muted">
+    Expected columns: a <strong>date</strong>, a <strong>description</strong>, and
+    either a signed <strong>amount</strong> column or separate
+    <strong>debit</strong>/<strong>credit</strong> columns.
+  </p>
+</div>
+{% endblock %}

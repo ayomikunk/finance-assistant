@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Finance Assistant{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">💰 Finance Assistant</a>
+    {% if user %}
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/upload">Upload</a>
+      <a href="/budgets">Budgets</a>
+      <span class="who">{{ user.first_name }}</span>
+      <a class="logout" href="/logout">Log out</a>
+    </nav>
+    {% endif %}
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
